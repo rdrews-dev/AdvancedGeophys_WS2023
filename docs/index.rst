@@ -13,26 +13,26 @@ This is a rough documentation for the lecture "Advanced Geophysics" held at the 
    :maxdepth: 2
    :caption: GPR Processing
 
-   docs/GPR/Introduction
-   docs/GPR/SettingUpPython
-   docs/GPR/DataCollection
-   docs/GPR/OverviewMap
-   docs/GPR/GPRProcessing
-   docs/GPR/Interpretation3D
+   GPR/Introduction
+   GPR/SettingUpPython
+   GPR/DataCollection
+   GPR/OverviewMap
+   GPR/GPRProcessing
+   GPR/Interpretation3D
 
 .. toctree::
    :maxdepth: 2
    :caption: Inversion of simple models
 
-   docs/Inversion/Introduction
-   docs/Inversion/LinearCase
-   docs/Inversion/NonLinearCase
+   Inversion/Introduction
+   Inversion/LinearCase
+   Inversion/NonLinearCase
    
 .. toctree::
    :maxdepth: 2
    :caption: Resistivity Mapping
 
-   docs/ResistivityMapping/Introduction
+   ResistivityMapping/Introduction
 
 Indices and tables
 ==================

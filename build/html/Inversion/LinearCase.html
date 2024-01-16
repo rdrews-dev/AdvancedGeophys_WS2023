@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linear Least Squares &mdash; Advanced Geophysics 2023 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Non-linear least squares" href="NonLinearCase.html" />
+    <link rel="prev" title="Introduction" href="Introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Advanced Geophysics 2023
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">GPR Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../GPR/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GPR/SettingUpPython.html">Python Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GPR/DataCollection.html">Data Collection and Import</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GPR/OverviewMap.html">Getting an Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GPR/GPRProcessing.html">GPR Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../GPR/Interpretation3D.html">3D Interpretation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Inversion of simple models</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Linear Least Squares</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#polynomial-curve-fitting">Polynomial Curve Fitting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="NonLinearCase.html">Non-linear least squares</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Resistivity Mapping</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ResistivityMapping/Introduction.html">Introduction to resistivity mapping</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Advanced Geophysics 2023</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Linear Least Squares</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Inversion/LinearCase.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="linear-least-squares">
+<h1>Linear Least Squares<a class="headerlink" href="#linear-least-squares" title="Permalink to this heading"></a></h1>
+<p>The key concept to understand is that all linear problems can be written using a matrix representation:</p>
+<div class="math notranslate nohighlight">
+\[\underbrace{\mathbf{G}}_{N_o \times N_p}\underbrace{\mathbf{m}}_{N_p \times 1} = \underbrace{\mathbf{d}}_{N_o \times 1}\]</div>
+<p>where the the vector <strong>d</strong> represents the observations, the vector <strong>m</strong> represents the unknown model parameters and the matrix <strong>G</strong> specifies the forward model. There are many geo- and environmental examples where this applied including all polynomial fitting problems and also some aspects of deconvolution which we treat in the exercises. The goal is always to find an optimal set of model parameters that approximates the observations in a least-squares sensed meaning that:</p>
+<div class="math notranslate nohighlight">
+\[LF(\mathbf{m}) = ||\mathbf{G}\mathbf{m} - \mathbf{d}||^2 = \sum_{k=1}^{N_o}(\sum_{i=1}^{N_p}G_{ki}m_i - d_k)^2 \rightarrow \text{small}\]</div>
+<p>This term quantifies in a least-squares sense how good the model for a given set of model parameter approximates the observations. It has many names (loss function, objective function, cost function,..). For a concrete example have a look at this <a class="reference external" href="https://youtu.be/oGFza4LdwSc">Video</a>:</p>
+<a class="reference external image-reference" href="https://youtu.be/oGFza4LdwSc"><img alt="Introducing the cost function" src="../_images/VideoCostFunction.png" style="width: 700px;" /></a>
+<p>In order to find the optimal set of model parameters the loss function needs to be minimized which in the linear case leads to the normal equation. This is spelled out in this <a class="reference external" href="https://youtu.be/oGFza4LdwSc">Video</a>:</p>
+<a class="reference external image-reference" href="https://youtu.be/_pIZTjtHkb"><img alt="Minimizing the cost function" src="../_images/VideoCostFunction2.png" style="width: 700px;" /></a>
+<section id="polynomial-curve-fitting">
+<h2>Polynomial Curve Fitting<a class="headerlink" href="#polynomial-curve-fitting" title="Permalink to this heading"></a></h2>
+<p>Polynomial curve fitting (linear regression being the most prominent example) belongs to the class of overdetermined linear inverse problems which can be solved using the normal equation. In the exercises in class we investigate this adventurous fitting and the even more adventurous predictions of this fit:</p>
+<a class="reference internal image-reference" href="../_images/AustralianTropoT.png"><img alt="Adventurous fitting" src="../_images/AustralianTropoT.png" style="width: 700px;" /></a>
+<p>In our analysis we show that a linear fit provides much more robust predictions to whatever is indicated in the newspaper article:</p>
+<a class="reference internal image-reference" href="../_images/LinearFit.png"><img alt="Adventurous fitting" src="../_images/LinearFit.png" style="width: 700px;" /></a>
+<p>Here is a function which applies the normal equation to the curve fitting problem:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>[coefficients]<span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nf">LstSqrFit1D</span><span class="p">(</span>auxvar,data,order<span class="p">)</span>
+<span class="w">  </span><span class="c">%This is a routine for least square fitting of polynomials with</span>
+<span class="w">  </span><span class="c">%order n (i.e. n=1 is straight line)</span>
+<span class="w">  </span><span class="c">%Auxvar is the auxilary variable (i.e. x-values)</span>
+<span class="w">  </span><span class="c">%Data is the data variable (i.e. y-axis)</span>
+<span class="w">  </span><span class="c">%Auxvar, Data must have same size.</span>
+<span class="w">  </span><span class="c">%The function returns the coefficients of the polynomial.</span>
+
+<span class="w">  </span><span class="c">%check if auxvar is column vector</span>
+<span class="w">  </span><span class="p">[</span><span class="n">row</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="p">]</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">size</span><span class="p">(</span><span class="n">auxvar</span><span class="p">);</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">row</span><span class="o">&lt;</span><span class="n">col</span><span class="p">)</span>
+<span class="w">      </span><span class="n">auxvar</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">auxvar</span><span class="o">&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">data</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">data</span><span class="o">&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="c">%setup G matrix</span>
+<span class="w">  </span><span class="n">NumberOfDataPoints</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">length</span><span class="p">(</span><span class="n">auxvar</span><span class="p">);</span>
+<span class="w">  </span><span class="n">G</span><span class="p">=</span><span class="nb">zeros</span><span class="p">(</span><span class="n">NumberOfDataPoints</span><span class="p">,</span><span class="n">order</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="n">order</span><span class="o">+</span><span class="mi">1</span>
+<span class="w">      </span><span class="n">G</span><span class="p">(:,</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">auxvar</span><span class="o">.^</span><span class="p">(</span><span class="n">order</span><span class="o">-</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">  </span><span class="k">end</span>
+<span class="w">  </span><span class="nb">display</span><span class="p">(</span><span class="nb">num2str</span><span class="p">(</span><span class="nb">cond</span><span class="p">(</span><span class="n">G</span><span class="p">)))</span>
+<span class="w">  </span><span class="c">%%Naive Lsq inversion (works for small orders)</span>
+<span class="w">  </span><span class="c">%coefficients = inv(G&#39;*G)*G&#39;*data;</span>
+<span class="w">  </span><span class="c">%Lsq inversion that can deal better with poor-conditioning</span>
+<span class="w">  </span><span class="c">%(python equivalent is numpy.linalg.lstsq)</span>
+<span class="w">  </span><span class="c">%coefficients = (G&#39;*G)\(G&#39;*data);</span>
+
+<span class="w">  </span><span class="c">%Diagonal Loading can stabilize this system.</span>
+
+<span class="w">  </span><span class="n">coefficients</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">(</span><span class="n">G</span><span class="o">&#39;*</span><span class="n">G</span><span class="o">+</span><span class="mf">0.0001</span><span class="o">*</span><span class="nb">eye</span><span class="p">(</span><span class="n">order</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">order</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="o">\</span><span class="p">(</span><span class="n">G</span><span class="o">&#39;*</span><span class="n">data</span><span class="p">);</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>And this is how you can run it:</p>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="c">% Year Month GlobalTemperature + ...</span>
+<span class="n">indtmp</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">load</span><span class="p">(</span><span class="s">&#39;InputData/UAH_Monthly_Global_Lower_Troposphere_Anomalies6_5_UntilApril2008.nh.txt&#39;</span><span class="p">);</span>
+<span class="n">indtmp_full</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">load</span><span class="p">(</span><span class="s">&#39;InputData/UAH_Monthly_Global_Lower_Troposphere_Anomalies6_5.nh.txt&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="c">%Time in decimal years</span>
+<span class="w">    </span><span class="n">xd</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">indtmp</span><span class="p">(:,</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">indtmp</span><span class="p">(:,</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mf">12.0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">xdf</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">indtmp_full</span><span class="p">(:,</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">indtmp_full</span><span class="p">(:,</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mf">12.0</span><span class="p">;</span>
+<span class="w">    </span><span class="c">%Global Temperatures in Troposphere</span>
+<span class="w">    </span><span class="n">yd</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">indtmp</span><span class="p">(:,</span><span class="mi">3</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ydf</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">indtmp_full</span><span class="p">(:,</span><span class="mi">3</span><span class="p">);</span>
+<span class="w">    </span><span class="c">%This is a function doing (naive) LSQ inversion for various orders.</span>
+<span class="w">    </span><span class="n">coeff1</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">LstSqrFit1DReg</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span><span class="n">yd</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.0</span><span class="p">);</span>
+<span class="w">    </span><span class="c">%This will be ill-conditioned</span>
+<span class="w">    </span><span class="c">%coeff6 = LstSqrFit1D(xd,yd,6);</span>
+<span class="w">    </span><span class="n">coeff6</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">LstSqrFit1DReg</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span><span class="n">yd</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mf">0.001</span><span class="p">);</span>
+<span class="w">    </span><span class="c">%This is matlab magic (in python try: numpy.linalg.lstsq)</span>
+<span class="w">    </span><span class="n">coeff6_polyfit</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">polyfit</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span><span class="n">yd</span><span class="p">,</span><span class="mi">6</span><span class="p">);</span>
+<span class="w">    </span><span class="nb">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="c">%polyval is a little helper function to plot polynomials</span>
+<span class="w">    </span><span class="c">%of varying degree.</span>
+<span class="w">    </span><span class="nb">plot</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span><span class="n">yd</span><span class="p">,</span><span class="s">&#39;k-&#39;</span><span class="p">);</span><span class="w"> </span><span class="n">hold</span><span class="w"> </span><span class="s">on</span><span class="p">;</span>
+<span class="w">    </span><span class="c">%plot(xdf,polyval(coeff1,xdf),&#39;r--&#39;);</span>
+<span class="w">    </span><span class="nb">plot</span><span class="p">(</span><span class="n">xdf</span><span class="p">,</span><span class="nb">polyval</span><span class="p">(</span><span class="n">coeff1</span><span class="p">,</span><span class="n">xdf</span><span class="p">),</span><span class="s">&#39;r--&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nb">plot</span><span class="p">(</span><span class="n">xdf</span><span class="p">,</span><span class="nb">polyval</span><span class="p">(</span><span class="n">coeff6</span><span class="p">,</span><span class="n">xdf</span><span class="p">),</span><span class="s">&#39;b--&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">inds</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="nb">find</span><span class="p">((</span><span class="n">xdf</span><span class="o">&gt;</span><span class="n">xd</span><span class="p">(</span><span class="k">end</span><span class="p">))</span><span class="o">==</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="nb">plot</span><span class="p">(</span><span class="n">xdf</span><span class="p">(</span><span class="n">inds</span><span class="p">),</span><span class="n">ydf</span><span class="p">(</span><span class="n">inds</span><span class="p">),</span><span class="s">&#39;m-&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="nb">ylim</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">yd</span><span class="p">),</span><span class="nb">max</span><span class="p">(</span><span class="n">yd</span><span class="p">)])</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="NonLinearCase.html" class="btn btn-neutral float-right" title="Non-linear least squares" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, R. Drews.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
