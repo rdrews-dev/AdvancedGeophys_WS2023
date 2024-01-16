@@ -18,6 +18,6 @@ The best way to export the data is to use standardized formats such as SEGY. How
   :width: 750
   :alt: 3D Analysis
 
-.. image:: images/OpenDTect.gif
+.. image:: images/OpenDtect.gif
   :width: 750
   :alt: 3D Analysis
