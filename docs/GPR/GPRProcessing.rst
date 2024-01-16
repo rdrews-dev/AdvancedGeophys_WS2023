@@ -6,7 +6,7 @@ DC Shift
 ---------
 Ideally individual traces should be centered 0 with positive and negative excursions signifiying the reflected wavelets. However, due to coupling effects between the antennas and the surface the receiver can become saturated with the direct wave and the ground-wave signal. This then results in a systematic DC offset which may change along the profile direction. Checking and correcting for such an offset is best done on indvidual traces:
 
-.. image:: ../../../../GPR/images/DCShiftTrace.png
+.. image:: images/DCShiftTrace.png
   :width: 500
   :alt: Effect of DC Shifting
 
@@ -19,7 +19,7 @@ We correct for this offset by subtracting the  mean of the pretrigger:
 
 In the full radargramm the DC offset is visible as individual vertical bands where the backscattered amplitudes systematically changes in the profile direction. The DC correction removes the vertical banding.
 
-.. image:: ../../../../GPR/images/DCShift.png
+.. image:: images/DCShift.png
   :width: 700
   :alt: Effect of DC Shifting
 
@@ -33,7 +33,7 @@ After the DC correciton, the pretrigger is not useful anymore and will cause pro
     SampleNumbers=SampleNumbers[:-Pretrigger]
     Depth=Depth[:-Pretrigger]; Traveltime=Traveltime[:-Pretrigger]
 
-.. image:: ../../../../GPR/images/DCShift_Pretrigger.png
+.. image:: images/DCShift_Pretrigger.png
   :width: 700
   :alt: Effect of removing the Pretrigger
 
@@ -53,7 +53,7 @@ Another problem that frequently occurs in GPR data are low-frequency oscillation
         ## Subtraction of the low-frequency signal, leaves us with the higher frequencies
         ProcArray[:,ii] =  ProcArray[:,ii] - wow.transpose()
 
-.. image:: ../../../../GPR/images/DCShift_Pretrigger_HighPass.png
+.. image:: images/DCShift_Pretrigger_HighPass.png
   :width: 700
   :alt: Effect of high-pass filtering
 
@@ -73,7 +73,7 @@ Now its time to check if we can amplify signals from larger depths by applying a
         Gain = SlopeGain*SampleNumbers**NonLinearity
         ProcArray[:,ii] =  ProcArray[:,ii]*Gain
 
-.. image:: ../../../../GPR/images/DCShift_Pretrigger_HighPass_SimpleGain.png
+.. image:: images/DCShift_Pretrigger_HighPass_SimpleGain.png
   :width: 700
   :alt: Effect of gaining.
 
@@ -89,7 +89,7 @@ A more agressive method would be to apply an automatic gain control in which we 
             maxamp[i] = np.max(np.abs(ProcArray[max(0, i - window // 2):min(i + window // 2, SampleNumbers[-1]), k]))
         ProcArray[:,k] = ProcArray[:,k]*scaling_factor / maxamp.transpose()
 
-.. image:: ../../../../GPR/images/DCShift_Pretrigger_HighPass_AGCGain.png
+.. image:: images/DCShift_Pretrigger_HighPass_AGCGain.png
   :width: 700
   :alt: Effect of gaining.
 
@@ -112,6 +112,6 @@ Last but not least we need to include the topography. Either this comes from a G
     for k in TraceNumbers:
         TopoArray[indshift[k]:SampleNumbers[-1]+indshift[k]-1,k] = ProcArray[0:SampleNumbers[-1]-1,k];  
         
-.. image:: ../../../../GPR/images/DCShift_Pretrigger_HighPass_Gain_TopoCorr.png
+.. image:: images/DCShift_Pretrigger_HighPass_Gain_TopoCorr.png
   :width: 700
   :alt: Effect of topographic correction.
