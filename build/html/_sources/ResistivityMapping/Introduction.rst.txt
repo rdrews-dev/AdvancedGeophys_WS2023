@@ -1,5 +1,5 @@
 =======================================
-Introduction to resistivity mapping
+Introduction
 =======================================
 A good introduction to resistivity mapping is given by `Binley and Slater <https://doi.org/10.1017/9781108685955>`_ accessible as a online resource from the library. In the video below I summarized some essentials from an applied perspective:
 
@@ -18,14 +18,3 @@ An important and educational example are principles of vertical electrical sound
 ..  .. image:: img/VideoCostFunction2.png
 ..   :width: 700
 ..   :alt: Video introduction the cost function
-
-
-Vertical electrical sounding
------------------------------
-Twin experiment
-
-.. .. literalinclude:: ../../../Resistivity/VES/VES_InversionTwinExperiment.py
-..    :language: python
-..    :emphasize-lines: 3,6-8
-..    :linenos:
-

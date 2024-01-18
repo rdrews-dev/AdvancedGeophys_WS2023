@@ -27,12 +27,14 @@ This is a rough documentation for the lecture "Advanced Geophysics" held at the 
    Inversion/Introduction
    Inversion/LinearCase
    Inversion/NonLinearCase
+   Inversion/Regularization
    
 .. toctree::
    :maxdepth: 2
    :caption: Resistivity Mapping
 
    ResistivityMapping/Introduction
+   ResistivityMapping/VESIntro
 
 Indices and tables
 ==================
