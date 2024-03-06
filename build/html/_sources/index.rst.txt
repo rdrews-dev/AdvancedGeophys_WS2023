@@ -16,6 +16,7 @@ This is a rough documentation for the lecture "Advanced Geophysics" held at the 
    GPR/Introduction
    GPR/SettingUpPython
    GPR/DataCollection
+   GPR/LinkGPR2GPS
    GPR/OverviewMap
    GPR/GPRProcessing
    GPR/Interpretation3D

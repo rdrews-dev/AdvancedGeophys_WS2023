@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linking the GPR to GPS &mdash; Advanced Geophysics 2023 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Getting an Overview" href="OverviewMap.html" />
+    <link rel="prev" title="Data Collection and Import" href="DataCollection.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Advanced Geophysics 2023
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">GPR Processing</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SettingUpPython.html">Python Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DataCollection.html">Data Collection and Import</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Linking the GPR to GPS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="OverviewMap.html">Getting an Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="GPRProcessing.html">GPR Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Interpretation3D.html">3D Interpretation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Inversion of simple models</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Inversion/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Inversion/LinearCase.html">Linear Least Squares</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Inversion/NonLinearCase.html">Non-linear least squares</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Inversion/Regularization.html">Regularization</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Resistivity Mapping</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ResistivityMapping/Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ResistivityMapping/VESIntro.html">Vertical electrical sounding</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Advanced Geophysics 2023</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Linking the GPR to GPS</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/GPR/LinkGPR2GPS.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="linking-the-gpr-to-gps">
+<h1>Linking the GPR to GPS<a class="headerlink" href="#linking-the-gpr-to-gps" title="Permalink to this heading"></a></h1>
+<p>In this particular survey the GPR was triggered using an odomoter and a fixed trace spacing. This works well, but unfortunately it doesn’t give you geolocation. This is why GPR data are usually collected jointly with a GPS which would make this step unneccessary. Anyway, be it as it may, the problem is now as follows: We have a fixed number of traces which were collected with a fixed trace spacing (here 0.2 m). Start, intermediated and turning points were marked with a GPS (stored in a separate txt file ‘CoordsOldFan.txt’). The goal is now to linearly interpolate between these points so that we can assign a geolocation to each trace. The result should look as follows:</p>
+<a class="reference internal image-reference" href="../_images/LinkGPR2GPS.png"><img alt="Effect of DC Shifting" src="../_images/LinkGPR2GPS.png" style="width: 500px;" /></a>
+<p>And those are the corresponding functions developed in class</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">Coords2UTM</span><span class="p">(</span><span class="n">Lat</span><span class="p">,</span> <span class="n">LatDM</span><span class="p">,</span> <span class="n">Lon</span><span class="p">,</span> <span class="n">LonDM</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function: Move into a local rectangluar coordinate system</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#input Lat LatDecimalminutes Lon LonDecimalMinutes</span>
+    <span class="c1">#output Lat decimal degrees; Lon decimal degrees</span>
+    <span class="n">LatDD</span> <span class="o">=</span> <span class="n">Lat</span><span class="o">+</span><span class="n">LatDM</span><span class="o">/</span><span class="mf">60.0</span>
+    <span class="n">LonDD</span> <span class="o">=</span> <span class="n">Lon</span><span class="o">+</span><span class="n">LonDM</span><span class="o">/</span><span class="mf">60.0</span>
+    <span class="n">transformer</span> <span class="o">=</span> <span class="n">Transformer</span><span class="o">.</span><span class="n">from_crs</span><span class="p">(</span><span class="s2">&quot;EPSG:4326&quot;</span><span class="p">,</span> <span class="s2">&quot;EPSG:32633&quot;</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">LatDD</span><span class="p">,</span><span class="n">LonDD</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+<span class="k">def</span> <span class="nf">InterpolateCoordsToTrace</span><span class="p">(</span><span class="n">FilePath2Coordinates</span><span class="p">,</span><span class="n">LineID</span><span class="p">,</span><span class="n">NumberOfPoints</span><span class="p">,</span><span class="n">AuxPlot</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Interpolated coordinates linearly between ordered set of points</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">UnivariateSpline</span>
+  <span class="c1">## Adapted from Stackoverflow use spline interpolation btw. points</span>
+  <span class="c1">## Read Coords</span>
+  <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">FilePath2Coordinates</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="n">comment</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
+  <span class="c1">## Get all coords pertaining to Line and get distance</span>
+  <span class="n">ldf</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;LineID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">LineID</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+  <span class="n">xx</span><span class="p">,</span><span class="n">yy</span> <span class="o">=</span> <span class="n">Coords2UTM</span><span class="p">(</span><span class="n">ldf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">ldf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span><span class="n">ldf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">ldf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">])</span>
+
+
+  <span class="n">ldf</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xx</span><span class="p">;</span><span class="n">ldf</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">yy</span>
+  <span class="n">ldistance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">yy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span> <span class="p">)</span>
+  <span class="n">ldistance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">ldistance</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">ldistance</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1">##Check RD</span>
+
+  <span class="c1"># Build a list of the spline function, one for each dimension:</span>
+  <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span> <span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span> <span class="p">)</span><span class="o">.</span><span class="n">T</span>
+  <span class="c1"># This is rubber banding</span>
+  <span class="c1">#splines = [UnivariateSpline(ldistance, coords, k=3, s=.2) for coords in points.T]</span>
+  <span class="n">splines</span> <span class="o">=</span> <span class="p">[</span><span class="n">UnivariateSpline</span><span class="p">(</span><span class="n">ldistance</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">coords</span> <span class="ow">in</span> <span class="n">points</span><span class="o">.</span><span class="n">T</span><span class="p">]</span>
+  <span class="c1"># Computed the spline for the asked distances:</span>
+  <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">NumberOfPoints</span><span class="p">)</span>
+  <span class="n">points_fitted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span> <span class="n">spl</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="k">for</span> <span class="n">spl</span> <span class="ow">in</span> <span class="n">splines</span> <span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+  <span class="k">if</span> <span class="n">AuxPlot</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+      <span class="c1"># Graph:</span>
+      <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">points</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="s1">&#39;ok&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;original points&#39;</span><span class="p">);</span>
+      <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">points_fitted</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="s1">&#39;xr&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;fitted spline k=3, s=.2&#39;</span><span class="p">);</span>
+      <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">);</span>
+      <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+  <span class="n">df_track</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">();</span><span class="n">df_track</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">points_fitted</span><span class="p">[:,</span><span class="mi">0</span><span class="p">];</span><span class="n">df_track</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">points_fitted</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+  <span class="k">return</span> <span class="n">df_track</span>
+
+
+
+
+  <span class="k">def</span> <span class="nf">LinkGprWithDEM</span><span class="p">(</span><span class="n">PathToRaw</span><span class="p">,</span><span class="n">PathToProc</span><span class="p">,</span><span class="n">FilePath2Coordinates</span><span class="p">,</span><span class="n">FilePath2DEM</span><span class="p">,</span><span class="n">LineID</span><span class="p">,</span><span class="n">AuxPlot</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">      </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Interpolated GPR coordinates between turning points.</span>
+<span class="sd">      Extract DEM elevation at interpolated coordinates</span>
+<span class="sd">      &quot;&quot;&quot;</span>
+      <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">PathToProc</span><span class="p">):</span>
+          <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The output GPR file already exists. I skip this for now.&#39;</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+          <span class="kn">import</span> <span class="nn">scipy.io</span>
+          <span class="c1">##Load the RAW GPR file</span>
+          <span class="n">ldat</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">loadmat</span><span class="p">(</span><span class="n">PathToRaw</span><span class="p">)</span>
+          <span class="c1">##Apply the rubber-band correction using spline interpolation</span>
+          <span class="n">df_track</span> <span class="o">=</span> <span class="n">InterpolateCoordsToTrace</span><span class="p">(</span><span class="n">FilePath2Coordinates</span><span class="p">,</span><span class="n">LineID</span><span class="p">,</span><span class="n">ldat</span><span class="p">[</span><span class="s1">&#39;tnum&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="mi">0</span><span class="p">)</span>
+          <span class="c1">##Get the topography from the DEM along GPR tracks.</span>
+          <span class="n">df_track</span> <span class="o">=</span> <span class="n">pygmt</span><span class="o">.</span><span class="n">grdtrack</span><span class="p">(</span><span class="n">grid</span><span class="o">=</span><span class="n">FilePath2DEM</span><span class="p">,</span><span class="n">points</span><span class="o">=</span><span class="n">df_track</span><span class="p">,</span><span class="n">newcolname</span> <span class="o">=</span> <span class="s2">&quot;elevation&quot;</span><span class="p">)</span>
+
+          <span class="c1">##Write all information into the GPR file</span>
+          <span class="n">ldat</span><span class="p">[</span><span class="s1">&#39;x_coord&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df_track</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]);</span><span class="n">ldat</span><span class="p">[</span><span class="s1">&#39;y_coord&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df_track</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]);</span>
+          <span class="n">ldat</span><span class="p">[</span><span class="s1">&#39;elev&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df_track</span><span class="p">[</span><span class="s1">&#39;elevation&#39;</span><span class="p">]);</span>
+          <span class="n">ldistance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">ldat</span><span class="p">[</span><span class="s1">&#39;x_coord&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">ldat</span><span class="p">[</span><span class="s1">&#39;y_coord&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span> <span class="p">)</span>
+          <span class="n">ldistance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">ldistance</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">ldistance</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+          <span class="n">ldat</span><span class="p">[</span><span class="s1">&#39;dist&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">ldistance</span>
+          <span class="c1">##Output GPR file for further processing.</span>
+          <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">savemat</span><span class="p">(</span><span class="n">PathToProc</span><span class="p">,</span> <span class="n">ldat</span><span class="p">)</span>
+          <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Wrote output GPR file </span><span class="si">{</span><span class="n">PathToProc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+          <span class="n">tmp</span> <span class="o">=</span> <span class="n">ldat</span><span class="p">[</span><span class="s1">&#39;elev&#39;</span><span class="p">]</span>
+          <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Max. elevation is:  </span><span class="si">{</span><span class="n">tmp</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+          <span class="k">if</span> <span class="n">AuxPlot</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+              <span class="n">plt</span><span class="o">.</span><span class="n">fig</span><span class="p">()</span>
+              <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span> <span class="n">ldat</span><span class="p">[</span><span class="s1">&#39;dist&#39;</span><span class="p">],</span> <span class="n">ldat</span><span class="p">[</span><span class="s1">&#39;elev&#39;</span><span class="p">],</span><span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="DataCollection.html" class="btn btn-neutral float-left" title="Data Collection and Import" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="OverviewMap.html" class="btn btn-neutral float-right" title="Getting an Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, R. Drews.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
